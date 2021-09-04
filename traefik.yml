@@ -11,7 +11,7 @@ services:
     image: authelia/authelia
     networks:
       - traefik-public
-    config:
+    configs:
       - configuration:/config/configuration.yml
       - users_database:/config/users_database.yml
     labels:
