@@ -3,7 +3,7 @@ function help_record_logger() {
     echo $@
 }
 
-function help_output_gen_password_hash() {
+function help_output_gen_username_password_hash() {
     docker run -ti --rm httpd:2.4.48-buster htpasswd -Bnb "${1}" "${2}"
 }
 

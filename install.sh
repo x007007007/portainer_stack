@@ -1,18 +1,20 @@
 #!/bin/bash
 . bash/help.sh
 
-read -p "traefik USERNAME:" USERNAME
-read -sp "traefik PASSWORD:" PASSWORD
-read -p "Let's Encrypt Email:" EMAIL
-read -p "DOMAIN_ROOT": DOMAIN
+read -p "traefik USERNAME:" username
+read -sp "traefik PASSWORD:" password
+read -p "Let's Encrypt Email:" email
+read -p "DOMAIN_ROOT": domain
 
 ##----->
+hashed_auth=`help_output_gen_password_hash "${username}" "${password}"`
 help_start_export_variable;
 
-HASHED_PASSWORD=`help_output_gen_password_hash "${USERNAME}" "${PASSWORD}"`
-EMAIL=$EMAIL
-TRAEFIK_DOMAIN=traefik.${DOMAIN}
-AUTHELIA_DOMAIN=authelia.${DOMAIN}
+HASHED_PASSWORD=${hashed_auth#*:}
+USERNAME=${hashed_auth%%:*}
+EMAIL=$email
+TRAEFIK_DOMAIN=traefik.${domain}
+AUTHELIA_DOMAIN=authelia.${domain}
 
 if [[ -e .env ]]; then . .env ; fi
 
