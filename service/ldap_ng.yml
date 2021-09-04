@@ -1,0 +1,53 @@
+version: '3.7'
+
+
+services:
+  jenkins:
+    image: coudot/lemonldap-ng
+    environment:
+      - SSODOMAIN=${LEMON_LDAP_DOMAIN?Variable not set}
+      - PORTAL_HOSTNAME=portal.${LEMON_LDAP_DOMAIN?Variable not set}
+      - MANAGER_HOSTNAME=mgr.${LEMON_LDAP_DOMAIN?Variable not set}
+      - HANDLER_HOSTNAME=handler.${LEMON_LDAP_DOMAIN?Variable not set}
+      - TEST1_HOSTNAME=t1.${LEMON_LDAP_DOMAIN?Variable not set}
+      - TEST2_HOSTNAME=t2.${LEMON_LDAP_DOMAIN?Variable not set}
+      - LOGLEVEL=debug
+      - FASTCGI_LISTEN_PORT=9000
+#    ports:
+#      - 80:80
+#      - 9000:9000
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.jenkins-http.rule=Host(`${LEMON_LDAP_DOMAIN?Variable not set}`)
+        - traefik.http.routers.jenkins-http.entrypoints=http
+        - traefik.http.routers.jenkins-http.middlewares=https-redirect
+        - traefik.http.routers.jenkins-http.service=jenkins
+        - traefik.http.routers.jenkins-https.rule=Host(`${LEMON_LDAP_DOMAIN?Variable not set}`)
+        - traefik.http.routers.jenkins-https.entrypoints=https
+        - traefik.http.routers.jenkins-https.tls=true
+        # Use the special Traefik service api@internal with the web UI/Dashboard
+        - traefik.http.routers.portainer-https.service=jenkins
+        - traefik.http.services.portainer.loadbalancer.server.port=8080
+
+
+volumes:
+  jenkins_data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/jenkins_data"
+
+networks:
+  default:
+    driver: overlay
+  traefik-public:
+    external: true
