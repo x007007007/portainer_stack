@@ -20,7 +20,7 @@ help_end_export_variable;
 ##<-----
 
 help_docker_network_create_overlay traefik-public
-docker stack deploy traefik -c traefik
+docker stack deploy traefik -c traefik.yml
 
 
 
