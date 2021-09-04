@@ -20,7 +20,7 @@ help_end_export_variable;
 ##<-----
 
 docker network create --driver=overlay traefik-public
-docker stack deploy stack traefik -c traefik
+docker stack deploy traefik -c traefik
 
 
 
