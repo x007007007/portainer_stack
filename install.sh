@@ -19,7 +19,7 @@ if [[ -e .env ]]; then . .env ; fi
 help_end_export_variable;
 ##<-----
 
-docker network create --driver=overlay traefik-public
+help_docker_network_create_overlay traefik-public
 docker stack deploy traefik -c traefik
 
 
