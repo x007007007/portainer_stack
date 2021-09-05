@@ -12,8 +12,10 @@ services:
     networks:
       - traefik-public
     configs:
-      - configuration:/config/configuration.yml
-      - users_database:/config/users_database.yml
+      - source: configuration
+        target: /config/configuration.yml
+      - source: users_database
+        target: ./conf/users_database.yml
     healthcheck:
       disable: true
     environment:
